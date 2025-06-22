@@ -1,22 +1,23 @@
-import { NavigationContainer } from '@react-navigation/native';
-import AuthNavigator from './AuthNavigator';
-import MainNavigator from './MainNavigator';
-import { useUser } from '../context/UserContext'; 
+import { NavigationContainer } from "@react-navigation/native";
+import AuthNavigator from "./AuthNavigator";
+import MainNavigator from "./MainNavigator";
+import { useUser } from "../context/UserContext";
+import { ActivityIndicator, View } from "react-native";
 
 export default function RootNavigator() {
-    const { isLoggedIn } = useUser();
+  const { user, loading } = useUser();
 
+  if (loading) {
     return (
-/*         <NavigationContainer>
-        {isLoggedIn ? (
-            <MainNavigator />
-        ) : (
-            <AuthNavigator />
-        )}
-        </NavigationContainer> */
-        <NavigationContainer>
-
-            <MainNavigator />
-        </NavigationContainer> 
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
     );
+  }
+
+  return (
+    <NavigationContainer>
+      {user ? <MainNavigator /> : <AuthNavigator />}
+    </NavigationContainer>
+  );
 }
