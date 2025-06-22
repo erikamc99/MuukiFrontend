@@ -1,43 +1,31 @@
-import styles from '../styles/components/RegisterFormStyles'
-import { useState } from 'react';
-import { useUser } from '../context/UserContext';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import FormButton from './FormButton';
-import { useNavigation } from '@react-navigation/native';
+import { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import styles from "../styles/components/RegisterFormStyles";
+import FormButton from "./FormButton";
+import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "../hooks/useAuth";
 
 export default function RegisterForm() {
+  const { register, loading, error } = useAuth();
   const navigation = useNavigation();
+  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [localError, setLocalError] = useState("");
 
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-
-  const { setUser, setIsLoggedIn } = useUser();
-
-  const handleRegister = () => {
-    if (!username || !email || !password || !confirmPassword) {
-      setError('*Todos los campos son obligatorios');
+  const handleRegister = async () => {
+    if (!username || !name || !email || !password || !confirmPassword) {
+      setLocalError("*Todos los campos son obligatorios");
       return;
     }
-  
     if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden');
+      setLocalError("Las contraseñas no coinciden");
       return;
     }
-  
-    setError('');
-  
-    setUser({
-      username,
-      name: username, 
-      email,
-      password,
-      avatarUrl: '../assets/default-avatar.png',
-    });
-  
-    setIsLoggedIn(true);
+    setLocalError("");
+    await register({ username, name, email, password });
   };
 
   return (
@@ -48,6 +36,13 @@ export default function RegisterForm() {
         placeholder="Usuario"
         value={username}
         onChangeText={setUsername}
+        autoCapitalize="none"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Nombre completo"
+        value={name}
+        onChangeText={setName}
       />
       <TextInput
         style={styles.input}
@@ -55,6 +50,7 @@ export default function RegisterForm() {
         keyboardType="email-address"
         value={email}
         onChangeText={setEmail}
+        autoCapitalize="none"
       />
       <TextInput
         style={styles.input}
@@ -70,13 +66,12 @@ export default function RegisterForm() {
         value={confirmPassword}
         onChangeText={setConfirmPassword}
       />
+      {localError ? <Text style={styles.errorText}>{localError}</Text> : null}
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
-
-      <FormButton onPress={handleRegister} text="REGISTRARSE" />
-
+      <FormButton onPress={handleRegister} text="REGISTRARSE" style={{ opacity: loading ? 0.5 : 1 }} />
       <View style={styles.loginPrompt}>
         <Text>¿Ya está registrado? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
           <Text style={styles.loginLink}>Inicie sesión</Text>
         </TouchableOpacity>
       </View>
