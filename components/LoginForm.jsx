@@ -21,12 +21,11 @@ export default function LoginForm() {
     <View style={styles.container}>
       <Text style={styles.title}>Iniciar Sesión</Text>
       <TextInput
-        placeholder="Correo electrónico"
+        placeholder="Usuario o correo electrónico"
         style={styles.input}
         value={input}
         onChangeText={setInput}
         autoCapitalize="none"
-        keyboardType="email-address"
       />
       <TextInput
         placeholder="Contraseña"
