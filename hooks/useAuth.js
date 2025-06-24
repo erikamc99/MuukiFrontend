@@ -7,15 +7,16 @@ export function useAuth() {
   const [error, setError] = useState("");
   const [user, setUser] = useState(null);
 
-  const login = async (email, password) => {
+  const login = async (userOrEmail, password) => {
     setLoading(true);
     setError("");
     try {
-      const { token, user } = await authService.login(email, password);
+      const { token, user } = await authService.login(userOrEmail, password);
       await saveAuth(token, user);
       setUser(user);
       return user;
     } catch (e) {
+       console.log(e);
       setError("Credenciales incorrectas");
       return null;
     } finally {
@@ -32,6 +33,7 @@ export function useAuth() {
       setUser(user);
       return user;
     } catch (e) {
+       console.log(e);
       setError("Error en registro");
       return null;
     } finally {

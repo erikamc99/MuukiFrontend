@@ -1,20 +1,21 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import styles from "../styles/components/LoginFormStyles";
 import FormButton from "./FormButton";
 import ForgotPasswordModal from "./modals/ForgotPasswordModal";
 import { useNavigation } from "@react-navigation/native";
-import { useAuth } from "../hooks/useAuth";
+import { UserContext } from "../context/UserContext";
 
 export default function LoginForm() {
-  const { login, loading, error } = useAuth();
+  const { login, loading, error } = useContext(UserContext);
   const navigation = useNavigation();
-  const [input, setInput] = useState("");
+  const [userOrEmail, setInput] = useState("");
   const [password, setPassword] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleLogin = async () => {
-    await login(input, password);
+    console.log("Login intentado", userOrEmail, password);
+    await login(userOrEmail, password);
   };
 
   return (
@@ -23,7 +24,7 @@ export default function LoginForm() {
       <TextInput
         placeholder="Usuario o correo electrónico"
         style={styles.input}
-        value={input}
+        value={userOrEmail}
         onChangeText={setInput}
         autoCapitalize="none"
       />

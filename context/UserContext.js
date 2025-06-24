@@ -1,22 +1,44 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { getUser, clearAuth } from "../utils/token";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth as useAuthHook } from "../hooks/useAuth";
 
-const UserContext = createContext();
+export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const { user: authUser, loadUser, logout: authLogout } = useAuth();
+  const {
+    login: authLogin,
+    register: authRegister,
+    logout: authLogout,
+    loading,
+    error,
+  } = useAuthHook();
+
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loadingUser, setLoadingUser] = useState(true);
 
   useEffect(() => {
-    const init = async () => {
+    const load = async () => {
       const u = await getUser();
       setUser(u);
-      setLoading(false);
+      setLoadingUser(false);
     };
-    init();
+    load();
   }, []);
+
+  const login = async (userOrEmail, password) => {
+    console.log("UserContext login llamado");
+    await authLogin(userOrEmail, password);
+    const u = await getUser();
+    setUser(u);
+    return u;
+  };
+
+  const register = async (userData) => {
+    await authRegister(userData);
+    const u = await getUser();
+    setUser(u);
+    return u;
+  };
 
   const logout = async () => {
     await authLogout();
@@ -25,7 +47,15 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ user, setUser, logout, loading }}>
+    <UserContext.Provider value={{
+      user,
+      setUser,
+      loading: loading || loadingUser,
+      error,
+      login,
+      register,
+      logout,
+    }}>
       {children}
     </UserContext.Provider>
   );

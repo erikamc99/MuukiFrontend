@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import styles from "../styles/components/RegisterFormStyles";
 import FormButton from "./FormButton";
 import { useNavigation } from "@react-navigation/native";
-import { useAuth } from "../hooks/useAuth";
+import { UserContext } from "../context/UserContext";
 
 export default function RegisterForm() {
-  const { register, loading, error } = useAuth();
+  const { register, loading, error } = useContext(UserContext);
   const navigation = useNavigation();
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");

@@ -4,8 +4,16 @@ const TOKEN_KEY = "muuki_token";
 const USER_KEY = "muuki_user";
 
 export const saveAuth = async (token, user) => {
-  await AsyncStorage.setItem(TOKEN_KEY, token);
-  await AsyncStorage.setItem(USER_KEY, JSON.stringify(user));
+  if (token !== undefined && token !== null) {
+    await AsyncStorage.setItem(TOKEN_KEY, token);
+  } else {
+    await AsyncStorage.removeItem(TOKEN_KEY);
+  }
+  if (user !== undefined && user !== null) {
+    await AsyncStorage.setItem(USER_KEY, JSON.stringify(user));
+  } else {
+    await AsyncStorage.removeItem(USER_KEY);
+  }
 };
 
 export const getToken = async () => {
