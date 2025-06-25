@@ -38,11 +38,14 @@ export default function AddSpaceScreen() {
       const ok = await addSpace({ name: spaceName, type });
       setLoading(false);
       if (ok) {
-        reloadSpaces();
-        navigation.navigate('MainTabs');
-      } else {
-        setError({ ...newError, general: "No se pudo crear el espacio" });
-      }
+      reloadSpaces();
+      navigation.navigate('NuevoAnimal', {
+        spaceName: spaceName,
+        type: type
+      });
+    } else {
+      setError({ ...newError, general: "No se pudo crear el espacio" });
+    }
     }
   };
 
