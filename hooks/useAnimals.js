@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import * as animalService from "../services/animalService";
 
-export function useAnimals(spaceId) {
+export function useAnimals() {
   const [animals, setAnimals] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -10,7 +10,7 @@ export function useAnimals(spaceId) {
     setLoading(true);
     setError(null);
     try {
-      const data = await animalService.fetchAnimals(spaceId);
+      const data = await animalService.fetchAnimals();
       setAnimals(data);
     } catch (e) {
       setError("Error al cargar animales");
@@ -19,19 +19,24 @@ export function useAnimals(spaceId) {
     }
   };
 
-  useEffect(() => {
-    if (spaceId) loadAnimals();
-  }, [spaceId]);
-
-  const addAnimal = async (animal) => {
-    try {
-      await animalService.addAnimal(spaceId, animal);
-      await loadAnimals();
-      return true;
-    } catch {
-      return false;
-    }
+  const addAnimal = async (spaceId, animal) => {
+    await animalService.addAnimal(spaceId, animal);
+    await loadAnimals();
   };
 
-  return { animals, loading, error, reload: loadAnimals, addAnimal };
+  const updateAnimal = async (animalId, data) => {
+    await animalService.updateAnimal(animalId, data);
+    await loadAnimals();
+  };
+
+  const deleteBreed = async (animalId, breedName) => {
+    await animalService.deleteBreed(animalId, breedName);
+    await loadAnimals();
+  };
+
+  useEffect(() => {
+    loadAnimals();
+  }, []);
+
+  return { animals, loading, error, reload: loadAnimals, addAnimal, updateAnimal, deleteBreed };
 }
