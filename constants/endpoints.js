@@ -1,4 +1,4 @@
-export const API_BASE = "http://192.168.1.14:5098/api";
+export const API_BASE = "http://172.20.10.10:5098/api";
 
 export const ENDPOINTS = {
   LOGIN: "/Auth/login",

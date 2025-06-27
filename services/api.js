@@ -3,8 +3,7 @@ import { API_BASE } from "../constants/endpoints";
 import { getToken } from "../utils/token";
 
 const api = axios.create({
-  baseURL: API_BASE,
-  timeout: 8000,
+  baseURL: API_BASE
 });
 
 api.interceptors.request.use(async (config) => {

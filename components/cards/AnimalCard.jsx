@@ -22,12 +22,14 @@ export default function AnimalCard({
   };
 
   const handleSave = (i) => {
-    if (onUpdateBreed) onUpdateBreed(breeds[i].name, editCount);
+    if (onUpdateBreed) onUpdateBreed(
+      breeds[i].name, editCount, breeds[i].animalId, breeds[i].species
+    );
     setEditIndex(null);
   };
 
   const handleDelete = (i) => {
-    if (onDeleteBreed) onDeleteBreed(breeds[i].name);
+    if (onDeleteBreed) onDeleteBreed(breeds[i].name, breeds[i].animalId);
     setEditIndex(null);
   };
 
@@ -49,7 +51,7 @@ export default function AnimalCard({
           </TouchableOpacity>
         </View>
       </View>
-      {isExpanded && breeds && breeds.length > 0 && (
+      {isExpanded && breeds && (
         <View style={styles.breedList}>
           {breeds.map((b, i) => (
             <View key={i} style={styles.breedRow}>
